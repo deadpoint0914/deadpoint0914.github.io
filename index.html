@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backink | Your Infinite Canvas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ink: {
+                            50: '#f9f9f9',
+                            100: '#f1f1f1',
+                            200: '#e1e1e1',
+                            300: '#d1d1d1',
+                            400: '#a1a1a1',
+                            500: '#717171',
+                            800: '#212121',
+                            900: '#0a0a0a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'e-ink-refresh': 'refresh 0.8s ease-in-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        refresh: {
+                            '0%': { filter: 'grayscale(1) contrast(1)', opacity: '1' },
+                            '20%': { filter: 'invert(1)', opacity: '0.8' },
+                            '50%': { filter: 'contrast(10) brightness(0.2)', opacity: '0.4' },
+                            '80%': { filter: 'invert(0)', opacity: '0.9' },
+                            '100%': { filter: 'grayscale(1) contrast(1.1)', opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .e-ink-screen {
+            background-color: #e0e0e0;
+            background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+            background-size: 4px 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #000;
+        }
+        .image-container img {
+            mix-blend-mode: multiply;
+            filter: grayscale(1) contrast(1.1);
+        }
+    </style>
+</head>
+<body class="bg-ink-50 text-ink-900 font-sans antialiased overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 glass-panel border-b border-ink-200">
+        <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex-1 hidden md:flex gap-8 text-xs uppercase tracking-[0.2em] font-medium text-ink-500">
+                <a href="#" class="hover:text-black transition-colors">Shop</a>
+                <a href="#" class="hover:text-black transition-colors">Customize</a>
+            </div>
+            <div class="flex-shrink-0">
+                <span class="font-display text-2xl font-extrabold tracking-tighter">BACKINK</span>
+            </div>
+            <div class="flex-1 hidden md:flex justify-end gap-8 text-xs uppercase tracking-[0.2em] font-medium text-ink-500">
+                <a href="#" class="hover:text-black transition-colors">About</a>
+                <a href="#" class="hover:text-black transition-colors">Support</a>
+            </div>
+            <div class="md:hidden">
+                <button class="p-2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h16M4 16h16"/></svg></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section & Interactive Simulator -->
+    <section class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen flex flex-col lg:flex-row items-center gap-16">
+        <div class="lg:w-1/2 space-y-8">
+            <div class="inline-block px-3 py-1 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded-full">New Technology</div>
+            <h1 class="font-display text-6xl md:text-8xl font-extrabold leading-[0.9] tracking-tighter">
+                Your Infinite <br><span class="text-ink-300">Canvas.</span>
+            </h1>
+            <p class="text-lg text-ink-500 max-w-md leading-relaxed">
+                The Backink E-Ink case transforms the back of your phone into a permanent display of self-expression. No batteries. No cables. Just your vision.
+            </p>
+            <div class="flex items-center gap-6 pt-4">
+                <button onclick="document.getElementById('selector').scrollIntoView()" class="px-8 py-4 bg-black text-white rounded-full font-semibold hover:bg-ink-800 transition-all transform hover:scale-105 active:scale-95">
+                    Start Designing
+                </button>
+                <button class="group flex items-center gap-2 font-semibold text-ink-800">
+                    See How It Works 
+                    <svg class="group-hover:translate-x-1 transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Simulator -->
+        <div class="lg:w-1/2 relative flex justify-center items-center">
+            <div class="absolute inset-0 bg-gradient-to-tr from-ink-100 to-transparent rounded-full blur-3xl opacity-50 -z-10"></div>
+            
+            <div class="relative w-72 md:w-80 aspect-[1/2] animate-float">
+                <!-- Phone Frame -->
+                <div class="absolute inset-0 bg-ink-900 rounded-[3rem] shadow-2xl p-3 border-[6px] border-ink-800">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-ink-900 rounded-b-2xl z-20"></div>
+                    
+                    <!-- E-Ink Display -->
+                    <div id="eink-display" class="relative w-full h-full rounded-[2.2rem] overflow-hidden e-ink-screen transition-all duration-500">
+                        <!-- Design Layer -->
+                        <div id="screen-content" class="w-full h-full opacity-100 flex flex-col">
+                            <img src='https://opal.google/board/blobs/68bdd968-f98a-43ab-bddb-e8eaba124f81' alt='media_1' class="w-full h-full object-cover grayscale contrast-125 mix-blend-multiply opacity-80" />
+                        </div>
+                        
+                        <!-- Refresh Overlay -->
+                        <div id="refresh-overlay" class="absolute inset-0 bg-black opacity-0 pointer-events-none"></div>
+                    </div>
+                </div>
+
+                <!-- Simulator Controls -->
+                <div class="absolute -right-12 bottom-12 space-y-4">
+                    <button onclick="refreshScreen()" class="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-ink-900 hover:text-white transition-all transform hover:scale-110">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6m12-4a9 9 0 0 1-15 6.7L3 16"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compatibility Section -->
+    <section id="selector" class="py-24 bg-white border-y border-ink-200 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+                <div class="space-y-4">
+                    <h2 class="font-display text-4xl font-bold tracking-tight">Step 1: Select Your Device</h2>
+                    <p class="text-ink-500 max-w-sm">Backink is precision-engineered for a seamless fit. Choose your model to begin.</p>
+                </div>
+                
+                <!-- Filter Toggle -->
+                <div class="inline-flex p-1 bg-ink-100 rounded-xl">
+                    <button onclick="switchBrand('apple')" id="btn-apple" class="px-8 py-3 rounded-lg text-sm font-bold tracking-wide transition-all bg-black text-white shadow-sm">APPLE</button>
+                    <button onclick="switchBrand('samsung')" id="btn-samsung" class="px-8 py-3 rounded-lg text-sm font-bold tracking-wide transition-all text-ink-500 hover:text-black">SAMSUNG</button>
+                </div>
+            </div>
+
+            <div id="model-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-500">
+                <!-- Apple Models (Initial) -->
+                <div class="model-card group p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer">
+                    <p class="text-xs font-bold text-ink-400 mb-1">IPHONE</p>
+                    <p class="font-semibold">15 Pro Max</p>
+                </div>
+                <div class="model-card group p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer">
+                    <p class="text-xs font-bold text-ink-400 mb-1">IPHONE</p>
+                    <p class="font-semibold">15 Pro</p>
+                </div>
+                <div class="model-card group p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer">
+                    <p class="text-xs font-bold text-ink-400 mb-1">IPHONE</p>
+                    <p class="font-semibold">14 Pro Max</p>
+                </div>
+                <div class="model-card group p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer">
+                    <p class="text-xs font-bold text-ink-400 mb-1">IPHONE</p>
+                    <p class="font-semibold">14 Pro</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Review Gallery -->
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="font-display text-4xl font-bold tracking-tight mb-4">Real World Clarity</h2>
+            <p class="text-ink-500">Captured by our community. See the paper-like quality in every light.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-2 relative h-[450px] rounded-3xl overflow-hidden group">
+                <img src='https://opal.google/board/blobs/ed0f9ead-a6f9-4ea6-806d-82bed9f4f959' alt='media_2' class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8 text-white">
+                    <p class="font-bold">San Francisco, CA</p>
+                    <p class="text-sm text-ink-300">"The matte finish is unlike any other screen. Absolutely zero glare."</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-8">
+                <div class="flex-1 bg-ink-200 rounded-3xl p-8 flex flex-col justify-center border border-ink-300">
+                    <div class="flex gap-1 mb-4">
+                        <svg class="text-black" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="text-black" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="text-black" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="text-black" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg class="text-black" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <p class="text-xl font-medium leading-snug">"It feels like I have a new phone case every morning. The resolution is stunning."</p>
+                    <p class="mt-4 text-ink-500 font-bold">— Marcus T.</p>
+                </div>
+                <div class="h-40 bg-ink-900 rounded-3xl flex items-center justify-center text-white overflow-hidden p-6 relative">
+                    <div class="absolute inset-0 bg-ink-800 opacity-20"></div>
+                    <p class="relative z-10 text-center text-xs tracking-[0.3em] font-light">FOLLOW @BACKINK</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-24 bg-ink-900 text-white">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16">
+            <div class="space-y-6">
+                <div class="w-12 h-12 rounded-full border border-ink-500 flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <h3 class="text-2xl font-display font-semibold">NFC Induction</h3>
+                <p class="text-ink-400 leading-relaxed">Powered by your phone’s NFC. No internal battery or charging required. Just snap it on and update wirelessly.</p>
+            </div>
+            <div class="space-y-6">
+                <div class="w-12 h-12 rounded-full border border-ink-500 flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                </div>
+                <h3 class="text-2xl font-display font-semibold">Eternal Display</h3>
+                <p class="text-ink-400 leading-relaxed">Once set, your image remains on the screen indefinitely without consuming a single drop of power from your battery.</p>
+            </div>
+            <div class="space-y-6">
+                <div class="w-12 h-12 rounded-full border border-ink-500 flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <h3 class="text-2xl font-display font-semibold">Premium Protection</h3>
+                <p class="text-ink-400 leading-relaxed">A slim-profile, shock-absorbent shell that prioritizes both form and function. Military-grade drop protection.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="py-32 px-6 bg-white">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="font-display text-4xl font-bold tracking-tight mb-16 text-center">Technical Specifications</h2>
+            
+            <div class="space-y-0 divide-y divide-ink-200">
+                <!-- FAQ 1 -->
+                <div class="py-8 group">
+                    <button onclick="toggleAccordion(1)" class="w-full flex items-center justify-between text-left">
+                        <span class="text-xl font-semibold">How does the case stay powered without a battery?</span>
+                        <svg id="icon-1" class="transform transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                    </button>
+                    <div id="faq-1" class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="pt-6 text-ink-500 leading-relaxed">
+                            Backink uses NFC (Near Field Communication) induction. It draws a microscopic burst of energy from your phone only during the image transfer. Once the image is displayed, it requires zero power to remain active, ensuring your phone's battery life remains untouched.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="py-8 group">
+                    <button onclick="toggleAccordion(2)" class="w-full flex items-center justify-between text-left">
+                        <span class="text-xl font-semibold">Is the case durable against the elements?</span>
+                        <svg id="icon-2" class="transform transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                    </button>
+                    <div id="faq-2" class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="pt-6 text-ink-500 leading-relaxed">
+                            Yes. The Backink case is built with a fully sealed internal module. It offers standard water and dust resistance, making it suitable for daily use in rain, near splashes, or in humid environments without compromising the E-Ink display’s integrity.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="py-8 group">
+                    <button onclick="toggleAccordion(3)" class="w-full flex items-center justify-between text-left">
+                        <span class="text-xl font-semibold">How visible is the image in bright light?</span>
+                        <svg id="icon-3" class="transform transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                    </button>
+                    <div id="faq-3" class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="pt-6 text-ink-500 leading-relaxed">
+                            Unlike traditional screens, E-Ink uses ambient light to be seen. The higher the light, the better the clarity. Under direct sunlight, images appear as sharp as printed ink on paper, with zero glare and high contrast.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-32 px-6 text-center bg-ink-50">
+        <div class="max-w-2xl mx-auto space-y-8">
+            <h2 class="font-display text-5xl font-bold tracking-tight">Ready to evolve?</h2>
+            <p class="text-ink-500 text-lg">Join the monochrome revolution and give your phone a soul.</p>
+            <div class="pt-6">
+                <button class="px-12 py-5 bg-black text-white text-lg font-bold rounded-2xl hover:scale-105 transition-transform shadow-xl">
+                    Order Now — $59.00
+                </button>
+                <p class="mt-4 text-xs font-medium text-ink-400 tracking-widest uppercase">Worldwide Shipping Available</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function refreshScreen() {
+            const display = document.getElementById('screen-content');
+            display.classList.add('animate-e-ink-refresh');
+            setTimeout(() => {
+                display.classList.remove('animate-e-ink-refresh');
+            }, 800);
+        }
+
+        function switchBrand(brand) {
+            const btnApple = document.getElementById('btn-apple');
+            const btnSamsung = document.getElementById('btn-samsung');
+            const grid = document.getElementById('model-grid');
+
+            if (brand === 'apple') {
+                btnApple.classList.add('bg-black', 'text-white', 'shadow-sm');
+                btnApple.classList.remove('text-ink-500');
+                btnSamsung.classList.remove('bg-black', 'text-white', 'shadow-sm');
+                btnSamsung.classList.add('text-ink-500');
+                
+                grid.innerHTML = `
+                    <div class="model-card p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer opacity-0 translate-y-4 animate-[fadeInUp_0.3s_ease_forwards]">
+                        <p class="text-xs font-bold text-ink-400 mb-1">IPHONE</p>
+                        <p class="font-semibold">15 Pro Max</p>
+                    </div>
+                    <div class="model-card p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer opacity-0 translate-y-4 animate-[fadeInUp_0.4s_ease_forwards]">
+                        <p class="text-xs font-bold text-ink-400 mb-1">IPHONE</p>
+                        <p class="font-semibold">15 Pro</p>
+                    </div>
+                    <div class="model-card p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer opacity-0 translate-y-4 animate-[fadeInUp_0.5s_ease_forwards]">
+                        <p class="text-xs font-bold text-ink-400 mb-1">IPHONE</p>
+                        <p class="font-semibold">14 Pro Max</p>
+                    </div>
+                    <div class="model-card p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer opacity-0 translate-y-4 animate-[fadeInUp_0.6s_ease_forwards]">
+                        <p class="text-xs font-bold text-ink-400 mb-1">IPHONE</p>
+                        <p class="font-semibold">14 Pro</p>
+                    </div>
+                `;
+            } else {
+                btnSamsung.classList.add('bg-black', 'text-white', 'shadow-sm');
+                btnSamsung.classList.remove('text-ink-500');
+                btnApple.classList.remove('bg-black', 'text-white', 'shadow-sm');
+                btnApple.classList.add('text-ink-500');
+
+                grid.innerHTML = `
+                    <div class="model-card p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer opacity-0 translate-y-4 animate-[fadeInUp_0.3s_ease_forwards]">
+                        <p class="text-xs font-bold text-ink-400 mb-1">GALAXY</p>
+                        <p class="font-semibold">S24 Ultra</p>
+                    </div>
+                    <div class="model-card p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer opacity-0 translate-y-4 animate-[fadeInUp_0.4s_ease_forwards]">
+                        <p class="text-xs font-bold text-ink-400 mb-1">GALAXY</p>
+                        <p class="font-semibold">S24+</p>
+                    </div>
+                    <div class="model-card p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer opacity-0 translate-y-4 animate-[fadeInUp_0.5s_ease_forwards]">
+                        <p class="text-xs font-bold text-ink-400 mb-1">GALAXY</p>
+                        <p class="font-semibold">S23 Ultra</p>
+                    </div>
+                    <div class="model-card p-6 border border-ink-200 rounded-2xl hover:border-black hover:shadow-xl transition-all cursor-pointer opacity-0 translate-y-4 animate-[fadeInUp_0.6s_ease_forwards]">
+                        <p class="text-xs font-bold text-ink-400 mb-1">GALAXY</p>
+                        <p class="font-semibold">S23</p>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleAccordion(id) {
+            const faq = document.getElementById(`faq-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            const allFaqs = document.querySelectorAll('[id^="faq-"]');
+            const allIcons = document.querySelectorAll('[id^="icon-"]');
+
+            allFaqs.forEach((el, index) => {
+                if (index + 1 !== id) {
+                    el.style.maxHeight = '0';
+                    allIcons[index].style.transform = 'rotate(0deg)';
+                }
+            });
+
+            if (faq.style.maxHeight === '0px' || faq.style.maxHeight === '') {
+                faq.style.maxHeight = faq.scrollHeight + 'px';
+                icon.style.transform = 'rotate(45deg)';
+            } else {
+                faq.style.maxHeight = '0';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Add custom fade in animation via CSS in JS
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(16px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
